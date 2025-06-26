@@ -1,0 +1,20 @@
+{
+  "name": "AnythingLLM",
+  "id": "AnythingLLM",
+  "available": true,
+  "short_desc": "Self-hosted LLM chat and document workspace.",
+  "author": "Mintplex Labs",
+  "port": 3001,
+  "categories": ["ai", "chat", "llm"],
+  "description": "AnythingLLM is a self-hosted workspace for chat and document Q&A with your own LLMs. This app runs without a reverse proxy.",
+  "tipi_version": 1,
+  "version": "1.8.2",
+  "source": "https://github.com/Mintplex-Labs/anything-llm",
+  "website": "https://anythingllm.com/",
+  "exposable": true,
+  "dynamic_config": true,
+  "form_fields": [],
+  "supported_architectures": ["amd64", "arm64"],
+  "created_at": 1724134938430,
+  "updated_at": 1724134938430
+}

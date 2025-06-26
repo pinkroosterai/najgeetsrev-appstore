@@ -1,0 +1,24 @@
+{
+  "services": [
+    {
+      "name": "anythingllm",
+      "image": "mintplexlabs/anythingllm:latest",
+      "internalPort": 3001,
+      "isMain": true,
+      "capAdd": ["SYS_ADMIN"],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/storage",
+          "containerPath": "/app/server/storage"
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/storage/.env",
+          "containerPath": "/app/server/.env"
+        }
+      ],
+      "environment": {
+        "STORAGE_DIR": "/app/server/storage"
+      }
+    }
+  ]
+}
