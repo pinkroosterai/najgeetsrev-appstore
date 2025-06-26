@@ -5,7 +5,7 @@
   "short_desc": "Open-source workflow automation platform.",
   "author": "windmill-labs",
   "port": 8000,
-  "categories": ["automation", "workflow"],
+  "categories": ["automation", "utilities"],
   "description": "Windmill is an open-source platform for workflow automation and job scheduling. It allows you to run scripts, schedule jobs, and build powerful automations.",
   "tipi_version": 1,
   "version": "1.100.0",
