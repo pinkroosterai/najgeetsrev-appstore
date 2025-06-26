@@ -9,7 +9,7 @@
   "description": "Langflow is a powerful UI for building, debugging, and deploying LLM flows. This package runs Langflow with a persistent PostgreSQL database. No reverse proxy is included; Langflow is served directly on port 7860.",
   "tipi_version": 1,
   "version": "latest",
-  "categories": ["ai", "llm", "tools"],
+  "categories": ["ai", "utilities", "development"],
   "short_desc": "Visual LLM flow builder and orchestrator.",
   "author": "langflow-ai",
   "source": "https://github.com/langflow-ai/langflow",
