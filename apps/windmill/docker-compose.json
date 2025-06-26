@@ -1,0 +1,25 @@
+{
+  "services": [
+    {
+      "name": "windmill",
+      "image": "ghcr.io/windmill-labs/windmill:1.100.0",
+      "environment": {
+        "WINDMILL_PORT": "8000"
+      },
+      "addPorts": [
+        {
+          "containerPort": 8000,
+          "hostPort": 8000,
+          "tcp": true
+        }
+      ],
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/windmill",
+          "containerPath": "/data",
+          "readOnly": false
+        }
+      ]
+    }
+  ]
+}
