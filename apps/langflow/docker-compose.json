@@ -1,0 +1,49 @@
+
+{
+  "services": [
+    {
+      "name": "langflow",
+      "image": "langflowai/langflow:latest",
+      "internalPort": 7860,
+      "isMain": true,
+      "environment": {
+        "LANGFLOW_DATABASE_URL": "postgresql://langflow:langflow@postgres:5432/langflow",
+        "LANGFLOW_CONFIG_DIR": "/app/langflow"
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/langflow",
+          "containerPath": "/app/langflow",
+          "readOnly": false
+        }
+      ],
+      "dependsOn": {
+        "postgres": {
+          "condition": "service_healthy"
+        }
+      }
+    },
+    {
+      "name": "postgres",
+      "image": "postgres:16",
+      "environment": {
+        "POSTGRES_USER": "langflow",
+        "POSTGRES_PASSWORD": "langflow",
+        "POSTGRES_DB": "langflow"
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/langflow-postgres",
+          "containerPath": "/var/lib/postgresql/data",
+          "readOnly": false
+        }
+      ],
+      "healthCheck": {
+        "test": "pg_isready -U langflow",
+        "interval": "10s",
+        "timeout": "5s",
+        "retries": 5
+      }
+    }
+  ]
+}
