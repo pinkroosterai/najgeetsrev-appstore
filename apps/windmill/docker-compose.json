@@ -1,22 +1,126 @@
 {
   "services": [
     {
-      "name": "windmill",
-      "image": "ghcr.io/windmill-labs/windmill:1.100.0",
+      "name": "windmill-db",
+      "image": "postgres:16",
       "environment": {
-        "WINDMILL_PORT": "8000"
+        "POSTGRES_PASSWORD": "changeme",
+        "POSTGRES_DB": "windmill"
       },
-      "addPorts": [
-        {
-          "containerPort": 8000,
-          "hostPort": 8000,
-          "tcp": true
-        }
-      ],
       "volumes": [
         {
-          "hostPath": "${APP_DATA_DIR}/data/windmill",
-          "containerPath": "/data",
+          "hostPath": "${APP_DATA_DIR}/data/db",
+          "containerPath": "/var/lib/postgresql/data",
+          "readOnly": false
+        }
+      ],
+      "healthCheck": {
+        "test": "pg_isready -U postgres",
+        "interval": "10s",
+        "timeout": "5s",
+        "retries": 5
+      },
+      "shmSize": "1g"
+    },
+    {
+      "name": "windmill-server",
+      "image": "ghcr.io/windmill-labs/windmill:1.100.0",
+      "environment": {
+        "DATABASE_URL": "postgres://postgres:changeme@windmill-db/windmill?sslmode=disable",
+        "MODE": "server"
+      },
+      "internalPort": 8000,
+      "isMain": true,
+      "dependsOn": {
+        "windmill-db": {
+          "condition": "service_healthy"
+        }
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/logs",
+          "containerPath": "/tmp/windmill/logs",
+          "readOnly": false
+        }
+      ]
+    },
+    {
+      "name": "windmill-worker",
+      "image": "ghcr.io/windmill-labs/windmill:1.100.0",
+      "environment": {
+        "DATABASE_URL": "postgres://postgres:changeme@windmill-db/windmill?sslmode=disable",
+        "MODE": "worker",
+        "WORKER_GROUP": "default"
+      },
+      "dependsOn": {
+        "windmill-db": {
+          "condition": "service_healthy"
+        }
+      },
+      "volumes": [
+        {
+          "hostPath": "/var/run/docker.sock",
+          "containerPath": "/var/run/docker.sock",
+          "readOnly": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/cache",
+          "containerPath": "/tmp/windmill/cache",
+          "readOnly": false
+        },
+        {
+          "hostPath": "${APP_DATA_DIR}/data/logs",
+          "containerPath": "/tmp/windmill/logs",
+          "readOnly": false
+        }
+      ],
+      "deploy": {
+        "resources": {
+          "limits": {
+            "cpus": "1",
+            "memory": "2048M"
+          }
+        }
+      }
+    },
+    {
+      "name": "windmill-worker-native",
+      "image": "ghcr.io/windmill-labs/windmill:1.100.0",
+      "environment": {
+        "DATABASE_URL": "postgres://postgres:changeme@windmill-db/windmill?sslmode=disable",
+        "MODE": "worker",
+        "WORKER_GROUP": "native",
+        "NUM_WORKERS": "8",
+        "SLEEP_QUEUE": "200"
+      },
+      "dependsOn": {
+        "windmill-db": {
+          "condition": "service_healthy"
+        }
+      },
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/logs",
+          "containerPath": "/tmp/windmill/logs",
+          "readOnly": false
+        }
+      ],
+      "deploy": {
+        "resources": {
+          "limits": {
+            "cpus": "1",
+            "memory": "2048M"
+          }
+        }
+      }
+    },
+    {
+      "name": "windmill-lsp",
+      "image": "ghcr.io/windmill-labs/windmill-lsp:latest",
+      "volumes": [
+        {
+          "hostPath": "${APP_DATA_DIR}/data/lsp-cache",
+          "containerPath": "/pyls/.cache",
           "readOnly": false
         }
       ]

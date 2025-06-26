@@ -13,8 +13,9 @@
   "website": "https://windmill.dev/",
   "exposable": true,
   "dynamic_config": true,
+  "internalPort": 8000,
   "form_fields": [],
   "supported_architectures": ["amd64", "arm64"],
-  "created_at": 1750967828000,
-  "updated_at": 1750967828000
+  "created_at": 1750968870000,
+  "updated_at": 1750968870000
 }
